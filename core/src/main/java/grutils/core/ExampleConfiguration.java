@@ -1,4 +1,4 @@
-package org.example.core;
+package grutils.core;
 
 import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
@@ -15,4 +15,5 @@ public class ExampleConfiguration extends AddonConfig {
   public ConfigProperty<Boolean> enabled() {
     return this.enabled;
   }
+
 }
