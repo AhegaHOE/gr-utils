@@ -1,8 +1,23 @@
 {
-  "grutils": {
+  "germanrputils": {
     "settings": {
       "enabled": {
         "name": "Enabled"
+      }
+    },
+    "hudWidget": {
+      "plant.name": "Plantage"
+    },
+    "widget": {
+      "category": {
+        "title": "GermanRP",
+        "description": "Shows you information about stuff on GermanRP"
+      },
+      "plant": {
+        "progressKey": "Fortschritt",
+        "progressValue": "%s/%smin",
+        "yieldKey": "Erlös",
+        "yieldValue": "%sg %s"
       }
     }
   }
