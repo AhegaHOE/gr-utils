@@ -10,7 +10,7 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
   protected void enable() {
     this.registerSettingCategory();
 
-    registerListeners();
+    registerListener();
     registerCommands();
 
     this.logger().info("Enabled GRUP!");
@@ -25,7 +25,11 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
 
   }
 
-  private void registerListeners() {
+  private void registerListener() {
+
+  }
+
+  private void registerServices() {
 
   }
 
