@@ -6,7 +6,8 @@
       }
     },
     "hudWidget": {
-      "plant.name": "Plantage"
+      "heilkrautpflanze.name": "Heilkraut-\npflanze",
+      "rose.name": "Rose"
     },
     "widget": {
       "category": {

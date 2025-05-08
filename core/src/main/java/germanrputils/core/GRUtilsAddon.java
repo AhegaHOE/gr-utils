@@ -1,7 +1,8 @@
 package germanrputils.core;
 
-import germanrputils.core.widget.GRUtilsWidgetCategory;
-import germanrputils.core.widget.PlantWidget;
+import germanrputils.core.listener.NetworkPayloadListener;
+import germanrputils.core.widget.category.GRUtilsWidgetCategory;
+import germanrputils.core.widget.HeilkrautpflanzeHudWidget;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.HudWidgetRegistry;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
@@ -10,41 +11,45 @@ import net.labymod.api.models.addon.annotation.AddonMain;
 @AddonMain
 public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
 
-    @Override
-    protected void enable() {
-        this.registerSettingCategory();
+  private HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget;
 
-        registerListener();
-        registerCommands();
-        registerServices();
-        registerWidgets();
+  @Override
+  protected void enable() {
+    this.registerSettingCategory();
 
-        this.logger().info("Enabled GermanRP Utils!");
-    }
+    registerWidgets();
+    registerListener();
+    registerCommands();
+    registerServices();
 
-    @Override
-    protected Class<GRUtilsConfiguration> configurationClass() {
-        return GRUtilsConfiguration.class;
-    }
+    this.logger().info("Enabled GermanRP Utils!");
+  }
 
-    private void registerCommands() {
+  @Override
+  protected Class<GRUtilsConfiguration> configurationClass() {
+    return GRUtilsConfiguration.class;
+  }
 
-    }
+  private void registerWidgets() {
+    final HudWidgetRegistry widgetRegistry = this.labyAPI().hudWidgetRegistry();
+    final HudWidgetCategory widgetCategory = new GRUtilsWidgetCategory();
 
-    private void registerListener() {
+    this.heilkrautpflanzeHudWidget = new HeilkrautpflanzeHudWidget(widgetCategory);
 
-    }
+    widgetRegistry.categoryRegistry().register(widgetCategory);
+    widgetRegistry.register(heilkrautpflanzeHudWidget);
+  }
 
-    private void registerServices() {
+  private void registerListener() {
+    this.registerListener(new NetworkPayloadListener(this, heilkrautpflanzeHudWidget));
+  }
 
-    }
+  private void registerCommands() {
 
-    private void registerWidgets() {
-        final HudWidgetRegistry widgetRegistry = this.labyAPI().hudWidgetRegistry();
-        final HudWidgetCategory widgetCategory = new GRUtilsWidgetCategory();
+  }
 
-        widgetRegistry.categoryRegistry().register(widgetCategory);
-        widgetRegistry.register(new PlantWidget(this, widgetCategory));
-    }
+  private void registerServices() {
+
+  }
 
 }

@@ -1,4 +1,4 @@
-package germanrputils.core.widget;
+package germanrputils.core.widget.category;
 
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
