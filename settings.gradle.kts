@@ -1,4 +1,4 @@
-rootProject.name = "labymod4-grutils"
+rootProject.name = "germanrputils"
 
 pluginManagement {
     val labyGradlePluginVersion = "0.5.8"

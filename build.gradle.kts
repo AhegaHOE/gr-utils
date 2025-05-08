@@ -5,11 +5,11 @@ plugins {
 
 val versions = providers.gradleProperty("net.labymod.minecraft-versions").get().split(";")
 
-group = "grutils"
+group = "germanrputils"
 version = providers.environmentVariable("VERSION").getOrElse("1.0.0")
 
 labyMod {
-    defaultPackageName = "grutils" //change this to your main package name (used by all modules)
+    defaultPackageName = "germanrputils" //change this to your main package name (used by all modules)
 
     minecraft {
         registerVersion(versions.toTypedArray()) {
@@ -23,7 +23,7 @@ labyMod {
     }
 
     addonInfo {
-        namespace = "grutils"
+        namespace = "germanrputils"
         displayName = "GermanRP Utils"
         author = "GermanRP Community"
         description = "Addon for the GermanRP Minecraft Server"

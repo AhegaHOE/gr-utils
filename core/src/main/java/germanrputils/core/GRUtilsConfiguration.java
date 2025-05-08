@@ -1,4 +1,4 @@
-package grutils.core;
+package germanrputils.core;
 
 import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;

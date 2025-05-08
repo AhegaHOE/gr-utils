@@ -1,4 +1,4 @@
-package grutils.core;
+package germanrputils.core;
 
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.models.addon.annotation.AddonMain;
