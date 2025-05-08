@@ -9,12 +9,24 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
   @Override
   protected void enable() {
     this.registerSettingCategory();
+
+    registerListeners();
+    registerCommands();
+
     this.logger().info("Enabled GRUP!");
   }
 
   @Override
   protected Class<GRUtilsConfiguration> configurationClass() {
     return GRUtilsConfiguration.class;
+  }
+
+  private void registerCommands() {
+
+  }
+
+  private void registerListeners() {
+
   }
 
 }
