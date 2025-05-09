@@ -32,9 +32,6 @@ public class NameTagListener {
             event.setNameTag(Component.text("§1" + playerName));
           }
         }
-
-
-
       }
 
     }
