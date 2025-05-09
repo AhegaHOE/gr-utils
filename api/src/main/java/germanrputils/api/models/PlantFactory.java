@@ -14,8 +14,8 @@ public final class PlantFactory {
       final int maxTime
   ) {
     return switch (type) {
-      case HEILKRAUTPFLANZE -> new Heilkrautpflanze(active, value, currentTime, maxTime);
-      case ROSE -> new Rose(active, value, currentTime, maxTime);
+      case HEILKRAUTPFLANZE -> new PlantHeilkraut(active, value, currentTime, maxTime);
+      case ROSE -> new PlantRose(active, value, currentTime, maxTime);
     };
   }
 

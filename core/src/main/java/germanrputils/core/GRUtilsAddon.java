@@ -1,6 +1,6 @@
 package germanrputils.core;
 
-import germanrputils.core.listener.NetworkPayloadListener;
+import germanrputils.core.listener.PlantListener;
 import germanrputils.core.widget.HeilkrautpflanzeHudWidget;
 import germanrputils.core.widget.RoseHudWidget;
 import germanrputils.core.widget.category.GRUtilsWidgetCategory;
@@ -57,8 +57,7 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
       final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget,
       final RoseHudWidget roseHudWidget
   ) {
-    this.registerListener(new NetworkPayloadListener(
-        this,
+    this.registerListener(new PlantListener(
         heilkrautpflanzeHudWidget,
         roseHudWidget)
     );

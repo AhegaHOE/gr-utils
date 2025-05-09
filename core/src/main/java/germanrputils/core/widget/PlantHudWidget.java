@@ -19,10 +19,8 @@ public abstract class PlantHudWidget
         extends TextHudWidget<PlantHudWidget.PlantHudWidgetConfig>
         implements PlantPaketReceiver {
 
-    private static final Component PROGRESS_KEY = Component.translatable(
-            "germanrputils.widget.plant.progressKey");
-    private static final Component YIELD_KEY = Component.translatable(
-            "germanrputils.widget.plant.yieldKey");
+    private static final Component PROGRESS_KEY = Component.translatable("germanrputils.widget.plant.progressKey");
+    private static final Component YIELD_KEY = Component.translatable("germanrputils.widget.plant.yieldKey");
     private static final String PROGRESS_TRANSLATABLE_VALUE = "germanrputils.widget.plant.progressValue";
     private static final String YIELD_TRANSLATABLE_VALUE = "germanrputils.widget.plant.yieldValue";
 
@@ -63,6 +61,8 @@ public abstract class PlantHudWidget
         }
 
         if (this.plant == null) {
+            this.progressLine.setState(TextLine.State.HIDDEN);
+            this.yieldLine.setState(TextLine.State.HIDDEN);
             return;
         }
 
@@ -70,6 +70,16 @@ public abstract class PlantHudWidget
     }
 
     public abstract Plant getDummyPlant();
+
+    public void reset() {
+        this.plant = null;
+    }
+
+    public void beginPlant(final Plant plant) {
+        this.plant = plant;
+        this.progressLine.setState(TextLine.State.VISIBLE);
+        this.yieldLine.setState(TextLine.State.VISIBLE);
+    }
 
     protected void renderPlant(final @NotNull Plant plant) {
 
@@ -92,21 +102,21 @@ public abstract class PlantHudWidget
         }
 
         if (showTimer) {
-            this.progressLine.updateAndFlush(
-                    I18n.getTranslation(
-                            PROGRESS_TRANSLATABLE_VALUE, plant.getCurrentTime(),
-                            plant.getMaxTime()
-                    ));
+            this.progressLine.updateAndFlush(I18n.getTranslation(
+                    PROGRESS_TRANSLATABLE_VALUE,
+                    plant.getCurrentTime(),
+                    plant.getMaxTime()
+            ));
         } else {
             this.progressLine.setState(TextLine.State.HIDDEN);
         }
 
         if (showYield) {
-            this.yieldLine.updateAndFlush(
-                    I18n.getTranslation(
-                            YIELD_TRANSLATABLE_VALUE, plant.getValue(),
-                            plant.getType().getDisplayName()
-                    ));
+            this.yieldLine.updateAndFlush(I18n.getTranslation(
+                    YIELD_TRANSLATABLE_VALUE,
+                    plant.getValue(),
+                    plant.getType().getDisplayName()
+            ));
         } else {
             this.yieldLine.setState(TextLine.State.HIDDEN);
         }

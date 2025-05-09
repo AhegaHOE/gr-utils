@@ -1,6 +1,6 @@
 package germanrputils.api.models;
 
-public sealed class Plant permits Heilkrautpflanze, Rose {
+public sealed class Plant permits PlantHeilkraut, PlantRose {
 
     protected final PlantType type;
     protected final boolean active;
