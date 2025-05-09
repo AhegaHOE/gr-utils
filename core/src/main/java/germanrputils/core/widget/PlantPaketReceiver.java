@@ -9,6 +9,6 @@ public interface PlantPaketReceiver {
 
   void reset();
 
-  void beginPlant(final Plant plant);
+  void updatePlant(final Plant plant);
 
 }

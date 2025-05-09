@@ -58,6 +58,7 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
       final RoseHudWidget roseHudWidget
   ) {
     this.registerListener(new PlantListener(
+        this,
         heilkrautpflanzeHudWidget,
         roseHudWidget)
     );

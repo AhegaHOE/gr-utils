@@ -11,11 +11,12 @@ public final class PlantFactory {
       final boolean active,
       final int value,
       final int currentTime,
-      final int maxTime
+      final int maxTime,
+      final char yieldUnit
   ) {
     return switch (type) {
-      case HEILKRAUTPFLANZE -> new PlantHeilkraut(active, value, currentTime, maxTime);
-      case ROSE -> new PlantRose(active, value, currentTime, maxTime);
+      case HEILKRAUTPFLANZE -> new PlantHeilkraut(active, value, currentTime, maxTime, yieldUnit);
+      case ROSE -> new PlantRose(active, value, currentTime, maxTime, yieldUnit);
     };
   }
 

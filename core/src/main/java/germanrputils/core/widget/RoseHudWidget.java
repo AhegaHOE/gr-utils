@@ -9,7 +9,8 @@ import net.labymod.api.client.gui.icon.Icon;
 @SuppressWarnings("java:S110")
 public class RoseHudWidget extends PlantHudWidget {
 
-  private static final Plant DUMMY_PLANT = PlantFactory.createPlant(PlantType.ROSE, true, 3, 3, 8);
+  private static final Plant DUMMY_PLANT = PlantFactory.createPlant(PlantType.ROSE, true, 3, 3, 8,
+      PlantType.ROSE.getYieldUnit());
 
   public RoseHudWidget(HudWidgetCategory category, Icon icon) {
     super("rose", category, icon, PlantHudWidget.PlantHudWidgetConfig.class);

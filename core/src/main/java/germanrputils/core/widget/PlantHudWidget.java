@@ -24,10 +24,11 @@ public abstract class PlantHudWidget
     private static final String PROGRESS_TRANSLATABLE_VALUE = "germanrputils.widget.plant.progressValue";
     private static final String YIELD_TRANSLATABLE_VALUE = "germanrputils.widget.plant.yieldValue";
 
-    protected TextLine progressLine;
-    protected TextLine yieldLine;
+    private TextLine progressLine;
+    private TextLine yieldLine;
 
-    protected Plant plant;
+    private Plant plant;
+    private boolean hudNeedsUpdate = true;
 
     protected PlantHudWidget(
             final String id,
@@ -45,7 +46,7 @@ public abstract class PlantHudWidget
         super.load(config);
 
         final String i18nProgressValue = I18n.getTranslation(PROGRESS_TRANSLATABLE_VALUE, 0, 0);
-        final String i18nYieldValue = I18n.getTranslation(YIELD_TRANSLATABLE_VALUE, 0, 0);
+        final String i18nYieldValue = I18n.getTranslation(YIELD_TRANSLATABLE_VALUE, 0, "", 0);
 
         this.progressLine = this.createLine(PROGRESS_KEY, i18nProgressValue);
         this.yieldLine = this.createLine(YIELD_KEY, i18nYieldValue);
@@ -66,6 +67,10 @@ public abstract class PlantHudWidget
             return;
         }
 
+        if (!hudNeedsUpdate) {
+            return;
+        }
+
         renderPlant(this.plant);
     }
 
@@ -75,13 +80,15 @@ public abstract class PlantHudWidget
         this.plant = null;
     }
 
-    public void beginPlant(final Plant plant) {
+    public void updatePlant(final Plant plant) {
         this.plant = plant;
         this.progressLine.setState(TextLine.State.VISIBLE);
         this.yieldLine.setState(TextLine.State.VISIBLE);
+        this.hudNeedsUpdate = true;
     }
 
     protected void renderPlant(final @NotNull Plant plant) {
+        hudNeedsUpdate = false;
 
         final boolean showTimer;
         final boolean showYield;
@@ -115,6 +122,7 @@ public abstract class PlantHudWidget
             this.yieldLine.updateAndFlush(I18n.getTranslation(
                     YIELD_TRANSLATABLE_VALUE,
                     plant.getValue(),
+                    plant.getYieldUnit(),
                     plant.getType().getDisplayName()
             ));
         } else {
@@ -130,23 +138,22 @@ public abstract class PlantHudWidget
         }
 
         switch (paket.getType()) {
-            case HEILKRAUTPFLANZE -> PlantFactory.createPlant(
+            case HEILKRAUTPFLANZE -> updatePlant(PlantFactory.createPlant(
                     PlantType.HEILKRAUTPFLANZE,
                     paket.isActive(),
                     paket.getValue(),
                     paket.getCurrentTime(),
-                    paket.getMaxTime()
-            );
-            case ROSE -> this.plant = PlantFactory.createPlant(
+                    paket.getMaxTime(),
+                    PlantType.HEILKRAUTPFLANZE.getYieldUnit()
+            ));
+            case ROSE -> updatePlant(PlantFactory.createPlant(
                     PlantType.ROSE,
                     paket.isActive(),
                     paket.getValue(),
                     paket.getCurrentTime(),
-                    paket.getMaxTime()
-            );
-            default -> {
-                // Hide
-            }
+                    paket.getMaxTime(),
+                    PlantType.ROSE.getYieldUnit()
+            ));
         }
 
     }

@@ -4,17 +4,19 @@ import java.util.Optional;
 
 public enum PlantType {
 
-    HEILKRAUTPFLANZE("Heilkrautpflanze", "Heilkrautpflanze", 15),
-    ROSE("Rosenstrauch", "Rose", 8);
+    HEILKRAUTPFLANZE("Heilkrautpflanze", "Heilkrautpflanze", 15, 'g'),
+    ROSE("Rosenstrauch", "Rose", 8, 'x');
 
     private final String displayName;
     private final String paketType;
     private final int maxTime;
+    private final char yieldUnit;
 
-    PlantType(String displayName, String paketType, int maxTime) {
+    PlantType(String displayName, String paketType, int maxTime, char yieldUnit) {
         this.displayName = displayName;
         this.paketType = paketType;
         this.maxTime = maxTime;
+        this.yieldUnit = yieldUnit;
     }
 
     /**
@@ -55,6 +57,14 @@ public enum PlantType {
 
     public int getMaxTime() {
         return maxTime;
+    }
+
+    public String getPaketType() {
+        return paketType;
+    }
+
+    public char getYieldUnit() {
+        return yieldUnit;
     }
 
 }
