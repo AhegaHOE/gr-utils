@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class OnServerConnect {
   private boolean justJoined = false;
   private boolean wasAFK;
+  private boolean faction;
   public boolean isGR = false;
   private final List<String> memberList = new ArrayList<>();
   private final List<String> darklistList = new ArrayList<>();
@@ -23,6 +24,11 @@ public class OnServerConnect {
       "^► \\[Darklist\\] - (\\w{3,16}|\\[GR\\]\\w{3,16})",
       Pattern.CANON_EQ
   );
+  private static final Pattern Bounty_Member_Pattern = Pattern.compile(
+      "^»     [►»] ((?:\\[GR\\\\])?\\w{3,16})",
+      Pattern.CANON_EQ
+  );
+
 
   public OnServerConnect(GRUtilsAddon addon) {
   }
@@ -56,6 +62,19 @@ public class OnServerConnect {
       }
       if (message.contentEquals("                  ► Fraktionsmember online ◄")) {
         event.setCancelled(true);
+        this.faction = true;
+      }
+      if (this.faction){
+        final Matcher matcher = Bounty_Member_Pattern.matcher(message);
+        if(!matcher.find()) {
+          if (message.equals("»         (Insgesamt 3, 3 verfügbar)")) {
+            Laby.labyAPI().minecraft().chatExecutor().displayClientMessage(this.faction.);
+            this.faction = false;
+            return;
+          }
+          return;
+        }
+        this.memberList.add(matcher.group(1));
       }
 
     }
