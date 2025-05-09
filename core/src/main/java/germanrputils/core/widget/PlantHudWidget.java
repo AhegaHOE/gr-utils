@@ -78,6 +78,7 @@ public abstract class PlantHudWidget
 
     public void reset() {
         this.plant = null;
+      this.hudNeedsUpdate = true;
     }
 
     public void updatePlant(final Plant plant) {
