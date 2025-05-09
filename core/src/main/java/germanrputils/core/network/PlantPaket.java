@@ -2,12 +2,13 @@ package germanrputils.core.network;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import germanrputils.api.models.PlantType;
 import net.labymod.api.util.GsonUtil;
 
 public class PlantPaket implements GRPaket {
 
   private final boolean active;
-  private final String type;
+  private final PlantType type;
   private final int value;
   private final int currentTime;
   private final int maxTime;
@@ -17,7 +18,7 @@ public class PlantPaket implements GRPaket {
       final JsonObject jsonObject = GsonUtil.parse(paketContent).getAsJsonObject();
 
       this.active = jsonObject.get("active").getAsBoolean();
-      this.type = jsonObject.get("type").getAsString();
+      this.type = PlantType.fromPaketName(jsonObject.get("type").getAsString());
       this.value = jsonObject.get("value").getAsInt();
       final JsonObject time = jsonObject.getAsJsonObject("time");
       this.currentTime = time.get("current").getAsInt();
@@ -34,7 +35,7 @@ public class PlantPaket implements GRPaket {
     return active;
   }
 
-  public String getType() {
+  public PlantType getType() {
     return type;
   }
 

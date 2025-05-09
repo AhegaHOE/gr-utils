@@ -1,6 +1,6 @@
 package germanrputils.api.models;
 
-public class Plant {
+public sealed class Plant permits Heilkrautpflanze, Rose {
 
     protected final PlantType type;
     protected final boolean active;
@@ -8,7 +8,7 @@ public class Plant {
     protected final int currentTime;
     protected final int maxTime;
 
-    public Plant(
+    protected Plant(
             final PlantType type,
             final boolean active,
             final int value,

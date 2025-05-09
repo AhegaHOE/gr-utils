@@ -5,40 +5,50 @@ import germanrputils.core.Utils;
 import germanrputils.core.network.PaketFactory;
 import germanrputils.core.network.PlantPaket;
 import germanrputils.core.widget.HeilkrautpflanzeHudWidget;
+import germanrputils.core.widget.RoseHudWidget;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.network.server.NetworkPayloadEvent;
 import net.labymod.api.util.GsonUtil;
 
 public class NetworkPayloadListener {
 
-  private final GRUtilsAddon addon;
-  private final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget;
+    private final GRUtilsAddon addon;
+    private final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget;
+    private final RoseHudWidget roseHudWidget;
 
-  public NetworkPayloadListener(
-      final GRUtilsAddon addon,
-      final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget) {
-    this.addon = addon;
-    this.heilkrautpflanzeHudWidget = heilkrautpflanzeHudWidget;
-  }
-
-  @Subscribe
-  public void onNetworkPayloadEvent(NetworkPayloadEvent event) {
-    if (!Utils.isLegacyAddonPacket(event.identifier())) {
-      return;
+    public NetworkPayloadListener(
+            final GRUtilsAddon addon,
+            final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget,
+            final RoseHudWidget roseHudWidget
+    ) {
+        this.addon = addon;
+        this.heilkrautpflanzeHudWidget = heilkrautpflanzeHudWidget;
+        this.roseHudWidget = roseHudWidget;
     }
 
-    PaketFactory.createPaket(event.getPayload()).ifPresent(paket -> {
-      switch (paket) {
-
-        case PlantPaket plantPaket -> this.heilkrautpflanzeHudWidget.onPaketReceive(plantPaket);
-
-        default -> {
-          // Ignore unknown pakets
+    @Subscribe
+    public void onNetworkPayloadEvent(NetworkPayloadEvent event) {
+        if (!Utils.isLegacyAddonPacket(event.identifier())) {
+            return;
         }
-      }
 
-      this.addon.logger().info("Received GR Paket: " + GsonUtil.DEFAULT_GSON.toJson(paket));
-    });
-  }
+        PaketFactory.createPaket(event.getPayload()).ifPresent(paket -> {
+            // Ignore unknown pakets
+            if (!(paket instanceof PlantPaket plantPaket)) {
+                return;
+            }
+
+            this.addon.logger().info("Received GR Paket: " + GsonUtil.DEFAULT_GSON.toJson(paket));
+
+            switch (plantPaket.getType()) {
+                case HEILKRAUTPFLANZE -> this.heilkrautpflanzeHudWidget.onPaketReceive(plantPaket);
+                case ROSE -> this.roseHudWidget.onPaketReceive(plantPaket);
+                default -> {
+                    // Ignore unknown packets
+                }
+            }
+
+        });
+    }
 
 }

@@ -1,34 +1,26 @@
 package germanrputils.api.models;
 
-import java.util.Optional;
-
 public enum PlantType {
 
-  HEILKRAUTPFLANZE("Heilkrautpflanze"),
-  ROSE("Rose");
+    HEILKRAUTPFLANZE("Heilkrautpflanze"),
+    ROSE("Rose");
 
-  private final String ingameName;
+    private final String displayName;
 
-  PlantType(String ingameName) {
-    this.ingameName = ingameName;
-  }
-
-  public String getIngameName() {
-    return ingameName;
-  }
-
-  public PlantType fromIngameName(final String ingameName) {
-    if (ingameName == null) {
-      return null;
+    PlantType(String displayName) {
+        this.displayName = displayName;
     }
 
-    for (PlantType type : values()) {
-      if (type.getIngameName().equals(ingameName)) {
-        return Optional.of(type);
-      }
+    public static PlantType fromPaketName(final String type) {
+        return switch (type) {
+            case "Heilkrautpflanze" -> HEILKRAUTPFLANZE;
+            case "Rose" -> ROSE;
+            default -> null;
+        };
     }
 
-    return Optional.empty();
-  }
+    public String getDisplayName() {
+        return displayName;
+    }
 
 }

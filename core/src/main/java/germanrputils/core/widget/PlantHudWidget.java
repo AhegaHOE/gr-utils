@@ -1,6 +1,7 @@
 package germanrputils.core.widget;
 
 import germanrputils.api.models.Plant;
+import germanrputils.api.models.PlantFactory;
 import germanrputils.api.models.PlantType;
 import germanrputils.core.network.PlantPaket;
 import net.labymod.api.client.component.Component;
@@ -33,9 +34,10 @@ public abstract class PlantHudWidget
     protected PlantHudWidget(
             final String id,
             final HudWidgetCategory category,
-            final Icon icon
+            final Icon icon,
+            final Class<PlantHudWidgetConfig> configClass
     ) {
-        super(id, PlantHudWidgetConfig.class);
+        super(id, configClass);
         this.bindCategory(category);
         this.setIcon(icon);
     }
@@ -51,19 +53,43 @@ public abstract class PlantHudWidget
         this.yieldLine = this.createLine(YIELD_KEY, i18nYieldValue);
     }
 
-    public abstract void renderDummyPlant(final Plant plant);
+    @Override
+    public void onTick(boolean isEditorContext) {
+        super.onTick(isEditorContext);
 
-    protected void renderPlant(
-            final @NotNull Plant plant,
-            final boolean isEditorContext
-    ) {
         if (isEditorContext) {
-            renderDummyPlant(plant);
+            renderPlant(getDummyPlant());
             return;
         }
 
-        final boolean showTimer = this.config.showTimer.get().equals(Boolean.TRUE) && plant.isActive();
-        final boolean showYield = this.config.showYield.get().equals(Boolean.TRUE) && plant.isActive();
+        if (this.plant == null) {
+            return;
+        }
+
+        renderPlant(this.plant);
+    }
+
+    public abstract Plant getDummyPlant();
+
+    protected void renderPlant(final @NotNull Plant plant) {
+
+        final boolean showTimer;
+        final boolean showYield;
+
+        switch (plant.getType()) {
+            case HEILKRAUTPFLANZE -> {
+                showTimer = this.config.showTimerHeilkrautpflanze.get().equals(Boolean.TRUE) && plant.isActive();
+                showYield = this.config.showYieldHeilkrautpflanze.get().equals(Boolean.TRUE) && plant.isActive();
+            }
+            case ROSE -> {
+                showTimer = this.config.showTimerRose.get().equals(Boolean.TRUE) && plant.isActive();
+                showYield = this.config.showYieldRose.get().equals(Boolean.TRUE) && plant.isActive();
+            }
+            default -> {
+                showTimer = false;
+                showYield = false;
+            }
+        }
 
         if (showTimer) {
             this.progressLine.updateAndFlush(
@@ -79,7 +105,7 @@ public abstract class PlantHudWidget
             this.yieldLine.updateAndFlush(
                     I18n.getTranslation(
                             YIELD_TRANSLATABLE_VALUE, plant.getValue(),
-                            plant.getType().getIngameName()
+                            plant.getType().getDisplayName()
                     ));
         } else {
             this.yieldLine.setState(TextLine.State.HIDDEN);
@@ -94,14 +120,14 @@ public abstract class PlantHudWidget
         }
 
         switch (paket.getType()) {
-            case "Heilkrautpflanze" -> this.plant = new Plant(
+            case HEILKRAUTPFLANZE -> PlantFactory.createPlant(
                     PlantType.HEILKRAUTPFLANZE,
                     paket.isActive(),
                     paket.getValue(),
                     paket.getCurrentTime(),
                     paket.getMaxTime()
             );
-            case "Rose" -> this.plant = new Plant(
+            case ROSE -> this.plant = PlantFactory.createPlant(
                     PlantType.ROSE,
                     paket.isActive(),
                     paket.getValue(),
@@ -118,10 +144,16 @@ public abstract class PlantHudWidget
     public static class PlantHudWidgetConfig extends TextHudWidgetConfig {
 
         @SwitchSetting
-        private final ConfigProperty<Boolean> showTimer = new ConfigProperty<>(true);
+        private final ConfigProperty<Boolean> showTimerHeilkrautpflanze = new ConfigProperty<>(true);
 
         @SwitchSetting
-        private final ConfigProperty<Boolean> showYield = new ConfigProperty<>(true);
+        private final ConfigProperty<Boolean> showYieldHeilkrautpflanze = new ConfigProperty<>(true);
+
+        @SwitchSetting
+        private final ConfigProperty<Boolean> showTimerRose = new ConfigProperty<>(true);
+
+        @SwitchSetting
+        private final ConfigProperty<Boolean> showYieldRose = new ConfigProperty<>(true);
 
     }
 
