@@ -2,7 +2,7 @@ package germanrputils.core;
 
 import net.labymod.api.client.resources.ResourceLocation;
 
-public final class Utils {
+public final class  Utils {
 
   private Utils() {
     // Utility class
