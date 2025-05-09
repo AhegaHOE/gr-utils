@@ -6,48 +6,32 @@ import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.dropdown.DropdownWidget.DropdownSetting;
 import net.labymod.api.configuration.loader.annotation.ConfigName;
+import net.labymod.api.configuration.loader.annotation.SpriteSlot;
+import net.labymod.api.configuration.loader.annotation.SpriteTexture;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 
 @ConfigName("settings")
+@SpriteTexture("settings")
 public class GRUtilsConfiguration extends AddonConfig {
 
   @SwitchSetting
   private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
 
-  @DropdownSetting
-  private final ConfigProperty<NameTagEnums> factioncolor;
-  @DropdownSetting
-  private final ConfigProperty<NameTagEnums> darklistcolor;
-  @DropdownSetting
-  private final ConfigProperty<NameTagEnums> bountycolor;
-  @DropdownSetting
-  private final ConfigProperty<FactionNameEnums> factionname;
-  public GRUtilsConfiguration() {
-    this.factioncolor = new ConfigProperty(NameTagEnums.NONE);
-    this.darklistcolor = new ConfigProperty(NameTagEnums.NONE);
-    this.bountycolor = new ConfigProperty(NameTagEnums.NONE);
-    this.factionname = new ConfigProperty(FactionNameEnums.NONE);
 
+  public GRUtilsConfiguration() {
   }
+  private final NameTagSubConfig nametags = new NameTagSubConfig();
+  @SpriteSlot(
+      size = 32,
+      x = 1
+  )
 
   @Override
   public ConfigProperty<Boolean> enabled() {
     return this.enabled;
   }
-  public ConfigProperty<NameTagEnums> factiontag() {
-    return this.factioncolor;
-  }
 
-  public ConfigProperty<NameTagEnums> darklisttag() {
-    return this.darklistcolor;
-  }
-
-  public ConfigProperty<NameTagEnums> bountytag() {
-    return this.bountycolor;
-  }
-
-
-  public ConfigProperty<FactionNameEnums> factionname() {
-    return factionname;
+  public NameTagSubConfig nametags() {
+    return this.nametags;
   }
 }

@@ -27,7 +27,7 @@ public class OnServerConnect {
       Pattern.CANON_EQ
   );
   private static final Pattern Bounty_Member_Pattern = Pattern.compile(
-      "^»     [►»] ((?:\\[GR\\\\])?\\w{3,16})",
+      "^    [►»] (\\w{3,16}|\\[GR\\]\\w{3,16})",
       Pattern.CANON_EQ
   );
 
@@ -43,6 +43,9 @@ public class OnServerConnect {
     if (ip.toLowerCase().contains("germanrp.eu") || ip.contentEquals("91.218.66.124")) {
       this.isGR = true;
       this.justJoined =  true;
+      this.darklistList.clear();
+      this.memberList.clear();
+      this.bountyList.clear();
       Laby.references().chatExecutor().chat("/darklist");
       Laby.references().chatExecutor().chat("/members");
       Laby.references().chatExecutor().chat("/kopfgelder");
@@ -68,7 +71,7 @@ public class OnServerConnect {
         this.faction = true;
         return;
       }
-      if (this.faction || this.faction && message.isEmpty()){
+      if (this.faction){
         event.setCancelled(true);
         final Matcher matcher = Bounty_Member_Pattern.matcher(message);
         if(!matcher.find()) {
@@ -90,14 +93,28 @@ public class OnServerConnect {
         event.setCancelled(true);
         final Matcher matcher = Bounty_Member_Pattern.matcher(message);
         if (!matcher.find()) {
-          if (message.startsWith("        (Insgesamt ") && message.endsWith(" verfügbar)")) {
-            this.bounty = false;
-            return;
-          }
+          this.bounty = false;
+          this.justJoined = false;
           return;
         }
         this.bountyList.add(matcher.group(1));
+        return;
+      }
+      if(message.isEmpty()){
+        event.setCancelled(true);
       }
     }
+  }
+
+  public List<String> getBountyList() {
+    return bountyList;
+  }
+
+  public List<String> getDarklistList() {
+    return darklistList;
+  }
+
+  public List<String> getMemberList() {
+    return memberList;
   }
 }
