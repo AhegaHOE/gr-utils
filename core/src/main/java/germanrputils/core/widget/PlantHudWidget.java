@@ -30,7 +30,6 @@ public abstract class PlantHudWidget
   private TextLine yieldLine;
 
   private Plant plant;
-  private boolean hudNeedsUpdate = true;
 
   protected PlantHudWidget(
       final String id,
@@ -69,10 +68,6 @@ public abstract class PlantHudWidget
       return;
     }
 
-    if (!hudNeedsUpdate) {
-      return;
-    }
-
     renderPlant(this.plant);
   }
 
@@ -80,18 +75,15 @@ public abstract class PlantHudWidget
 
   public void reset() {
     this.plant = null;
-    this.hudNeedsUpdate = true;
   }
 
   public void updatePlant(final Plant plant) {
     this.plant = plant;
     this.progressLine.setState(TextLine.State.VISIBLE);
     this.yieldLine.setState(TextLine.State.VISIBLE);
-    this.hudNeedsUpdate = true;
   }
 
   protected void renderPlant(final @NotNull Plant plant) {
-    hudNeedsUpdate = false;
 
     final boolean showTimer;
     final boolean showYield;
