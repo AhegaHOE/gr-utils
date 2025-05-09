@@ -9,12 +9,13 @@ import germanrputils.core.GRUtilsAddon;
 import germanrputils.core.Utils;
 import germanrputils.core.widget.HeilkrautpflanzeHudWidget;
 import germanrputils.core.widget.RoseHudWidget;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
 import net.labymod.api.event.client.network.server.NetworkPayloadEvent;
 import net.labymod.api.util.GsonUtil;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlantListener {
 
@@ -97,14 +98,12 @@ public class PlantListener {
     // because the server does not send a packet of the plant until it first ticks
     switch (message) {
       case HEILKRAUTPFLANZE_SOW_MESSAGE -> {
-        final Plant plant = PlantFactory.createPlant(PlantType.HEILKRAUTPFLANZE, true, 0, 0,
-            PlantType.HEILKRAUTPFLANZE.getMaxTime(), PlantType.HEILKRAUTPFLANZE.getYieldUnit());
+        final Plant plant = PlantFactory.createPlant(PlantType.HEILKRAUTPFLANZE);
         this.heilkrautpflanzeHudWidget.updatePlant(plant);
         return true;
       }
       case ROSE_SOW_MESSAGE -> {
-        final Plant plant = PlantFactory.createPlant(PlantType.ROSE, true, 0, 0,
-            PlantType.ROSE.getMaxTime(), PlantType.ROSE.getYieldUnit());
+        final Plant plant = PlantFactory.createPlant(PlantType.ROSE);
         this.roseHudWidget.updatePlant(plant);
         return true;
       }
