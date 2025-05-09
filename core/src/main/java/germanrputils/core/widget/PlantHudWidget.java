@@ -4,19 +4,20 @@ import germanrputils.api.models.Plant;
 import germanrputils.api.models.PlantFactory;
 import germanrputils.api.models.PlantType;
 import germanrputils.core.network.PlantPaket;
+import germanrputils.core.widget.HeilkrautpflanzeHudWidget.HeilkrautpflanzeHudConfig;
+import germanrputils.core.widget.RoseHudWidget.RoseHudWidgetConfig;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
+import net.labymod.api.client.gui.hud.hudwidget.text.TextLine.State;
 import net.labymod.api.client.gui.icon.Icon;
-import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
-import net.labymod.api.configuration.loader.property.ConfigProperty;
 import net.labymod.api.util.I18n;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class PlantHudWidget
-    extends TextHudWidget<PlantHudWidget.PlantHudWidgetConfig>
+public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
+    extends TextHudWidget<T>
     implements PlantPaketReceiver {
 
   private static final Component PROGRESS_KEY = Component.translatable(
@@ -35,7 +36,7 @@ public abstract class PlantHudWidget
       final String id,
       final HudWidgetCategory category,
       final Icon icon,
-      final Class<PlantHudWidgetConfig> configClass
+      final Class<T> configClass
   ) {
     super(id, configClass);
     this.bindCategory(category);
@@ -43,7 +44,7 @@ public abstract class PlantHudWidget
   }
 
   @Override
-  public void load(final PlantHudWidgetConfig config) {
+  public void load(final T config) {
     super.load(config);
 
     final String i18nProgressValue = I18n.getTranslation(PROGRESS_TRANSLATABLE_VALUE, 0, 0);
@@ -63,8 +64,8 @@ public abstract class PlantHudWidget
     }
 
     if (this.plant == null) {
-      this.progressLine.setState(TextLine.State.HIDDEN);
-      this.yieldLine.setState(TextLine.State.HIDDEN);
+      this.progressLine.setState(State.HIDDEN);
+      this.yieldLine.setState(State.HIDDEN);
       return;
     }
 
@@ -79,8 +80,8 @@ public abstract class PlantHudWidget
 
   public void updatePlant(final Plant plant) {
     this.plant = plant;
-    this.progressLine.setState(TextLine.State.VISIBLE);
-    this.yieldLine.setState(TextLine.State.VISIBLE);
+    this.progressLine.setState(State.VISIBLE);
+    this.yieldLine.setState(State.VISIBLE);
   }
 
   protected void renderPlant(final @NotNull Plant plant) {
@@ -90,15 +91,19 @@ public abstract class PlantHudWidget
 
     switch (plant.getType()) {
       case HEILKRAUTPFLANZE -> {
-        showTimer =
-            this.config.showTimerHeilkrautpflanze.get().equals(Boolean.TRUE) && plant.isActive();
-        showYield =
-            this.config.showYieldHeilkrautpflanze.get().equals(Boolean.TRUE) && plant.isActive();
+        final HeilkrautpflanzeHudConfig heilkrautpflanzeHudWidgetConfig = (HeilkrautpflanzeHudConfig) this.config;
+        showTimer = heilkrautpflanzeHudWidgetConfig.showTimer().get().equals(Boolean.TRUE)
+            && plant.isActive();
+        showYield = heilkrautpflanzeHudWidgetConfig.showYield().get().equals(Boolean.TRUE)
+            && plant.isActive();
       }
+
       case ROSE -> {
-        showTimer = this.config.showTimerRose.get().equals(Boolean.TRUE) && plant.isActive();
-        showYield = this.config.showYieldRose.get().equals(Boolean.TRUE) && plant.isActive();
+        final RoseHudWidgetConfig roseHudWidgetConfig = (RoseHudWidgetConfig) this.config;
+        showTimer = roseHudWidgetConfig.showTimer().get().equals(Boolean.TRUE) && plant.isActive();
+        showYield = roseHudWidgetConfig.showYield().get().equals(Boolean.TRUE) && plant.isActive();
       }
+
       default -> {
         showTimer = false;
         showYield = false;
@@ -112,7 +117,7 @@ public abstract class PlantHudWidget
           plant.getMaxTime()
       ));
     } else {
-      this.progressLine.setState(TextLine.State.HIDDEN);
+      this.progressLine.setState(State.DISABLED);
     }
 
     if (showYield) {
@@ -123,7 +128,7 @@ public abstract class PlantHudWidget
           plant.getType().getDisplayName()
       ));
     } else {
-      this.yieldLine.setState(TextLine.State.HIDDEN);
+      this.yieldLine.setState(State.DISABLED);
     }
 
   }
@@ -152,22 +157,6 @@ public abstract class PlantHudWidget
           PlantType.ROSE.getYieldUnit()
       ));
     }
-
-  }
-
-  public static class PlantHudWidgetConfig extends TextHudWidgetConfig {
-
-    @SwitchSetting
-    private final ConfigProperty<Boolean> showTimerHeilkrautpflanze = new ConfigProperty<>(true);
-
-    @SwitchSetting
-    private final ConfigProperty<Boolean> showYieldHeilkrautpflanze = new ConfigProperty<>(true);
-
-    @SwitchSetting
-    private final ConfigProperty<Boolean> showTimerRose = new ConfigProperty<>(true);
-
-    @SwitchSetting
-    private final ConfigProperty<Boolean> showYieldRose = new ConfigProperty<>(true);
 
   }
 

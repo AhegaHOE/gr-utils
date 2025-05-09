@@ -6,8 +6,16 @@
       }
     },
     "hudWidget": {
-      "heilkrautpflanze.name": "Heilkraut-\npflanze",
-      "rose.name": "Rose"
+      "heilkrautpflanze": {
+        "name": "Heilkraut-\npflanze",
+        "showTimer.name": "Timer",
+        "showYield.name": "Erlös"
+      },
+      "rose": {
+        "name": "Rose",
+        "showTimer.name": "Timer",
+        "showYield.name": "Erlös"
+      }
     },
     "widget": {
       "category": {
