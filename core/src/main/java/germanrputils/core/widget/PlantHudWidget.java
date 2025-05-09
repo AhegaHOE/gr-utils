@@ -3,7 +3,7 @@ package germanrputils.core.widget;
 import germanrputils.api.models.Plant;
 import germanrputils.api.models.PlantFactory;
 import germanrputils.api.models.PlantType;
-import germanrputils.core.network.PlantPaket;
+import germanrputils.api.network.PlantPaket;
 import germanrputils.core.widget.HeilkrautpflanzeHudWidget.HeilkrautpflanzeHudConfig;
 import germanrputils.core.widget.RoseHudWidget.RoseHudWidgetConfig;
 import net.labymod.api.client.component.Component;

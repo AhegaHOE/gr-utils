@@ -1,7 +1,7 @@
 package germanrputils.core.widget;
 
 import germanrputils.api.models.Plant;
-import germanrputils.core.network.PlantPaket;
+import germanrputils.api.network.PlantPaket;
 
 public interface PlantPaketReceiver {
 
