@@ -20,7 +20,7 @@ public class GRUtilsConfiguration extends AddonConfig {
 
   public GRUtilsConfiguration() {
   }
-  private final NameTagSubConfig nametags = new NameTagSubConfig();
+  private final NameTagSubConfig NameTagSubConfig = new NameTagSubConfig();
   @SpriteSlot(
       size = 32,
       x = 1
@@ -31,7 +31,7 @@ public class GRUtilsConfiguration extends AddonConfig {
     return this.enabled;
   }
 
-  public NameTagSubConfig nametags() {
-    return this.nametags;
+  public NameTagSubConfig NameTagSubConfig() {
+    return this.NameTagSubConfig;
   }
 }

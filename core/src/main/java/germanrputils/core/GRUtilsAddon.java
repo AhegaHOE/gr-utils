@@ -10,6 +10,7 @@ import net.labymod.api.models.addon.annotation.AddonMain;
 public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
 
   private OnServerConnect onServerConnect;
+  private GRUtilsConfiguration GRUtilsConfiguration;
 
   @Override
   protected void enable() {
@@ -39,8 +40,10 @@ public class GRUtilsAddon extends LabyAddon<GRUtilsConfiguration> {
   private void registerServices() {
 
   }
-  public OnServerConnect getOnServerConnect() {
+  public OnServerConnect OnServerConnect() {
     return this.onServerConnect;
   }
-
+  public GRUtilsConfiguration GRUtilsConfiguration(){
+    return this.GRUtilsConfiguration;
+  }
 }
