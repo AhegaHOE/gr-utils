@@ -86,9 +86,7 @@ public class PlantListener {
       switch (plantPaket.getType()) {
         case HEILKRAUTPFLANZE -> this.heilkrautpflanzeHudWidget.onPaketReceive(plantPaket);
         case ROSE -> this.roseHudWidget.onPaketReceive(plantPaket);
-        default -> {
-          // Ignore unknown packets
-        }
+        case STOFF -> this.stoffHudWidget.onPaketReceive(plantPaket);
       }
 
     });
@@ -98,6 +96,7 @@ public class PlantListener {
   public void onServerDisconnectEvent(final ServerDisconnectEvent event) {
     this.heilkrautpflanzeHudWidget.reset();
     this.roseHudWidget.reset();
+    this.stoffHudWidget.reset();
   }
 
   /**
