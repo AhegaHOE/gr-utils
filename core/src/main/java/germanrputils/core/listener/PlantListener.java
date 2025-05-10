@@ -76,7 +76,7 @@ public class PlantListener {
 
     PaketFactory.createPaket(event.getPayload()).ifPresent(paket -> {
 
-      this.addon.logger().debug("Received packet: " + GsonUtil.DEFAULT_GSON.toJson(paket));
+      this.addon.logger().info("Received packet: " + GsonUtil.DEFAULT_GSON.toJson(paket));
 
       // Ignore unknown pakets
       if (!(paket instanceof PlantPaket plantPaket)) {
