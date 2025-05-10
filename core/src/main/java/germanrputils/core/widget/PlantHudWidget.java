@@ -4,9 +4,6 @@ import germanrputils.api.models.Plant;
 import germanrputils.api.models.PlantFactory;
 import germanrputils.api.models.PlantType;
 import germanrputils.api.network.PlantPaket;
-import germanrputils.core.widget.HeilkrautpflanzeHudWidget.HeilkrautpflanzeHudConfig;
-import germanrputils.core.widget.RoseHudWidget.RoseHudWidgetConfig;
-import germanrputils.core.widget.StoffHudWidget.StoffHudWidgetConfig;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
@@ -18,9 +15,8 @@ import net.labymod.api.util.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
-    extends TextHudWidget<T>
-    implements PlantPaketReceiver {
+public abstract class PlantHudWidget extends TextHudWidget<TextHudWidgetConfig> implements
+    PlantPaketReceiver {
 
   private static final Component PROGRESS_KEY = Component.translatable(
       "germanrputils.widget.plant.progressKey");
@@ -34,19 +30,14 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
 
   private Plant plant;
 
-  protected PlantHudWidget(
-      final String id,
-      final HudWidgetCategory category,
-      final Icon icon,
-      final Class<T> configClass
-  ) {
-    super(id, configClass);
+  protected PlantHudWidget(final String id, final HudWidgetCategory category, final Icon icon) {
+    super(id);
     this.bindCategory(category);
     this.setIcon(icon);
   }
 
   @Override
-  public void load(final T config) {
+  public void load(final TextHudWidgetConfig config) {
     super.load(config);
 
     final String i18nProgressValue = I18n.getTranslation(PROGRESS_TRANSLATABLE_VALUE, 0, 0);
@@ -54,6 +45,9 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
 
     this.progressLine = this.createLine(PROGRESS_KEY, i18nProgressValue);
     this.yieldLine = this.createLine(YIELD_KEY, i18nYieldValue);
+
+    this.progressLine.setState(State.HIDDEN);
+    this.yieldLine.setState(State.HIDDEN);
   }
 
   @Override
@@ -66,8 +60,6 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
     }
 
     if (this.plant == null) {
-      this.progressLine.setState(State.HIDDEN);
-      this.yieldLine.setState(State.HIDDEN);
       return;
     }
 
@@ -78,65 +70,23 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
 
   public void reset() {
     this.plant = null;
+    this.progressLine.setState(State.HIDDEN);
+    this.yieldLine.setState(State.HIDDEN);
   }
 
   public void updatePlant(final @Nullable Plant plant) {
     this.plant = plant;
+    this.progressLine.setState(State.VISIBLE);
+    this.yieldLine.setState(State.VISIBLE);
   }
 
   protected void renderPlant(final @NotNull Plant plant) {
-
-    boolean showTimer = false;
-    boolean showYield = false;
-
-    switch (plant.getType()) {
-      case HEILKRAUTPFLANZE -> {
-        final HeilkrautpflanzeHudConfig heilkrautpflanzeHudWidgetConfig = (HeilkrautpflanzeHudConfig) this.config;
-        showTimer = heilkrautpflanzeHudWidgetConfig.showTimer().get().equals(Boolean.TRUE)
-            && plant.isActive();
-        showYield = heilkrautpflanzeHudWidgetConfig.showYield().get().equals(Boolean.TRUE)
-            && plant.isActive();
-      }
-
-      case ROSE -> {
-        final RoseHudWidgetConfig roseHudWidgetConfig = (RoseHudWidgetConfig) this.config;
-        showTimer = roseHudWidgetConfig.showTimer().get().equals(Boolean.TRUE) && plant.isActive();
-        showYield = roseHudWidgetConfig.showYield().get().equals(Boolean.TRUE) && plant.isActive();
-      }
-
-      case STOFF -> {
-        final StoffHudWidgetConfig stoffHudWidgetConfig = (StoffHudWidgetConfig) this.config;
-        showTimer = stoffHudWidgetConfig.showTimer().get().equals(Boolean.TRUE) && plant.isActive();
-        showYield = stoffHudWidgetConfig.showYield().get().equals(Boolean.TRUE) && plant.isActive();
-      }
-
-    }
-
-    if (showTimer) {
-      this.progressLine.updateAndFlush(I18n.getTranslation(
-          PROGRESS_TRANSLATABLE_VALUE,
-          plant.getCurrentTime(),
-          plant.getMaxTime()
-      ));
-      this.progressLine.setState(State.VISIBLE);
-    } else {
-      this.progressLine.updateAndFlush(null);
-      this.progressLine.setState(State.DISABLED);
-    }
-
-    if (showYield) {
-      this.yieldLine.updateAndFlush(I18n.getTranslation(
-          YIELD_TRANSLATABLE_VALUE,
-          plant.getValue(),
-          plant.getYieldUnit(),
-          plant.getType().getDisplayName()
-      ));
-      this.yieldLine.setState(State.VISIBLE);
-    } else {
-      this.yieldLine.updateAndFlush(null);
-      this.yieldLine.setState(State.DISABLED);
-    }
-
+    this.progressLine.updateAndFlush(
+        I18n.getTranslation(PROGRESS_TRANSLATABLE_VALUE, plant.getCurrentTime(),
+            plant.getMaxTime()));
+    this.yieldLine.updateAndFlush(
+        I18n.getTranslation(YIELD_TRANSLATABLE_VALUE, plant.getValue(), plant.getYieldUnit(),
+            plant.getType().getDisplayName()));
   }
 
   @Override
@@ -147,17 +97,27 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
     }
 
     final PlantType type = paket.getType();
+
+    final int currentTime;
+
+    // If plant is null it just got created
+    if (this.plant == null) {
+      currentTime = 0;
+    } else {
+      currentTime = this.plant.getCurrentTime() + 1;
+    }
+
     final Plant updatedPlant = PlantFactory.createPlant(
         type,
         paket.isActive(),
         paket.getValue(),
-        this.plant.getCurrentTime() + 1,
+        currentTime,
         type.getMaxTime(),
         type.getYieldUnit()
     );
 
     if (updatedPlant.getCurrentTime() > updatedPlant.getMaxTime() + 5) {
-      updatePlant(null);
+      reset();
       return;
     }
 
