@@ -92,37 +92,22 @@ public abstract class PlantHudWidget extends TextHudWidget<TextHudWidgetConfig> 
   @Override
   public void onPaketReceive(final @NotNull PlantPaket paket) {
     if (!paket.isActive()) {
-      updatePlant(null);
+      reset();
       return;
     }
 
     final PlantType type = paket.getType();
 
-    final int currentTime;
-
-    // If plant is null it just got created
-    if (this.plant == null) {
-      currentTime = 0;
-    } else {
-      currentTime = this.plant.getCurrentTime() + 1;
-    }
-
     final Plant updatedPlant = PlantFactory.createPlant(
         type,
         paket.isActive(),
         paket.getValue(),
-        currentTime,
+        paket.getCurrentTime(),
         type.getMaxTime(),
         type.getYieldUnit()
     );
 
-    if (updatedPlant.getCurrentTime() > updatedPlant.getMaxTime() + 5) {
-      reset();
-      return;
-    }
-
     updatePlant(updatedPlant);
-
   }
 
 }
