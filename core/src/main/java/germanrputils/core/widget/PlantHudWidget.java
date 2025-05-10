@@ -81,8 +81,6 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
 
   public void updatePlant(final Plant plant) {
     this.plant = plant;
-    this.progressLine.setState(State.VISIBLE);
-    this.yieldLine.setState(State.VISIBLE);
   }
 
   protected void renderPlant(final @NotNull Plant plant) {
@@ -119,7 +117,9 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
           plant.getCurrentTime(),
           plant.getMaxTime()
       ));
+      this.progressLine.setState(State.VISIBLE);
     } else {
+      this.progressLine.updateAndFlush(null);
       this.progressLine.setState(State.DISABLED);
     }
 
@@ -130,7 +130,9 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
           plant.getYieldUnit(),
           plant.getType().getDisplayName()
       ));
+      this.yieldLine.setState(State.VISIBLE);
     } else {
+      this.yieldLine.updateAndFlush(null);
       this.yieldLine.setState(State.DISABLED);
     }
 
