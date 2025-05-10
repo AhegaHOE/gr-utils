@@ -141,35 +141,26 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
   @Override
   public void onPaketReceive(final @NotNull PlantPaket paket) {
     if (!paket.isActive()) {
-      this.plant = null;
+      updatePlant(null);
+      return;
     }
 
-    switch (paket.getType()) {
-      case HEILKRAUTPFLANZE -> updatePlant(PlantFactory.createPlant(
-          PlantType.HEILKRAUTPFLANZE,
-          paket.isActive(),
-          paket.getValue(),
-          paket.getCurrentTime(),
-          paket.getMaxTime(),
-          PlantType.HEILKRAUTPFLANZE.getYieldUnit()
-      ));
-      case ROSE -> updatePlant(PlantFactory.createPlant(
-          PlantType.ROSE,
-          paket.isActive(),
-          paket.getValue(),
-          paket.getCurrentTime(),
-          paket.getMaxTime(),
-          PlantType.ROSE.getYieldUnit()
-      ));
-      case STOFF -> updatePlant(PlantFactory.createPlant(
-          PlantType.STOFF,
-          paket.isActive(),
-          paket.getValue(),
-          paket.getCurrentTime(),
-          paket.getMaxTime(),
-          PlantType.STOFF.getYieldUnit()
-      ));
+    final PlantType type = paket.getType();
+    final Plant updatedPlant = PlantFactory.createPlant(
+        type,
+        paket.isActive(),
+        paket.getValue(),
+        this.plant.getCurrentTime() + 1,
+        type.getMaxTime(),
+        type.getYieldUnit()
+    );
+
+    if (updatedPlant.getCurrentTime() > updatedPlant.getMaxTime() + 5) {
+      updatePlant(null);
+      return;
     }
+
+    updatePlant(updatedPlant);
 
   }
 
