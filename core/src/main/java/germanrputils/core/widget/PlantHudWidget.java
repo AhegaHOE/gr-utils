@@ -16,6 +16,7 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextLine.State;
 import net.labymod.api.client.gui.icon.Icon;
 import net.labymod.api.util.I18n;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
     extends TextHudWidget<T>
@@ -56,7 +57,7 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
   }
 
   @Override
-  public void onTick(boolean isEditorContext) {
+  public void onTick(final boolean isEditorContext) {
     super.onTick(isEditorContext);
 
     if (isEditorContext) {
@@ -79,7 +80,7 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
     this.plant = null;
   }
 
-  public void updatePlant(final Plant plant) {
+  public void updatePlant(final @Nullable Plant plant) {
     this.plant = plant;
   }
 
