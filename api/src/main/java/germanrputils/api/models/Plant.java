@@ -1,13 +1,13 @@
 package germanrputils.api.models;
 
-public sealed class Plant permits PlantHeilkraut, PlantRose {
+public sealed class Plant permits PlantHeilkraut, PlantRose, PlantStoff {
 
     protected final PlantType type;
     protected final boolean active;
     protected final int value;
     protected final int currentTime;
     protected final int maxTime;
-    protected final char yieldUnit;
+  protected final String yieldUnit;
 
     protected Plant(
             final PlantType type,
@@ -15,7 +15,7 @@ public sealed class Plant permits PlantHeilkraut, PlantRose {
             final int value,
             final int currentTime,
             final int maxTime,
-            char yieldUnit
+        final String yieldUnit
     ) {
         this.type = type;
         this.active = active;
@@ -45,7 +45,7 @@ public sealed class Plant permits PlantHeilkraut, PlantRose {
         return maxTime;
     }
 
-    public char getYieldUnit() {
+  public String getYieldUnit() {
         return yieldUnit;
     }
 

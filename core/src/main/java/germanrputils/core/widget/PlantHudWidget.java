@@ -6,6 +6,7 @@ import germanrputils.api.models.PlantType;
 import germanrputils.api.network.PlantPaket;
 import germanrputils.core.widget.HeilkrautpflanzeHudWidget.HeilkrautpflanzeHudConfig;
 import germanrputils.core.widget.RoseHudWidget.RoseHudWidgetConfig;
+import germanrputils.core.widget.StoffHudWidget.StoffHudWidgetConfig;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
@@ -86,8 +87,8 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
 
   protected void renderPlant(final @NotNull Plant plant) {
 
-    final boolean showTimer;
-    final boolean showYield;
+    boolean showTimer = false;
+    boolean showYield = false;
 
     switch (plant.getType()) {
       case HEILKRAUTPFLANZE -> {
@@ -104,10 +105,12 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
         showYield = roseHudWidgetConfig.showYield().get().equals(Boolean.TRUE) && plant.isActive();
       }
 
-      default -> {
-        showTimer = false;
-        showYield = false;
+      case STOFF -> {
+        final StoffHudWidgetConfig stoffHudWidgetConfig = (StoffHudWidgetConfig) this.config;
+        showTimer = stoffHudWidgetConfig.showTimer().get().equals(Boolean.TRUE) && plant.isActive();
+        showYield = stoffHudWidgetConfig.showYield().get().equals(Boolean.TRUE) && plant.isActive();
       }
+
     }
 
     if (showTimer) {
@@ -155,6 +158,14 @@ public abstract class PlantHudWidget<T extends TextHudWidgetConfig>
           paket.getCurrentTime(),
           paket.getMaxTime(),
           PlantType.ROSE.getYieldUnit()
+      ));
+      case STOFF -> updatePlant(PlantFactory.createPlant(
+          PlantType.STOFF,
+          paket.isActive(),
+          paket.getValue(),
+          paket.getCurrentTime(),
+          paket.getMaxTime(),
+          PlantType.STOFF.getYieldUnit()
       ));
     }
 

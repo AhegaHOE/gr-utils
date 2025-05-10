@@ -15,6 +15,11 @@
         "name": "Rose",
         "showTimer.name": "Timer",
         "showYield.name": "Erlös"
+      },
+      "stoff": {
+        "name": "Stoffpflanze",
+        "showTimer.name": "Timer",
+        "showYield.name": "Erlös"
       }
     },
     "widget": {
