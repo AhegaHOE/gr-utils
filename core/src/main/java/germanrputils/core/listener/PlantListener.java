@@ -20,12 +20,9 @@ import net.labymod.api.util.GsonUtil;
 
 public class PlantListener {
 
-  private static final Pattern HARVEST_PATTERN =
-      Pattern.compile("^► Du hast \\S* (\\S+) mit \\d+(?: Stück|x|g)? Erlös geerntet\\.$",
-          Pattern.CANON_EQ);
-  private static final String HEILKRAUTPFLANZE_SOW_MESSAGE = "► Du hast eine Heilkrautpflanze ausgelegt.";
-  private static final String ROSE_SOW_MESSAGE = "► Du hast einen Rosenstrauch angepflanzt.";
-  private static final String STOFF_SOW_MESSAGE = "► Du hast eine Stoffpflanze ausgelegt.";
+  private static final Pattern HARVEST_PATTERN = Pattern.compile(
+      "^► Du hast \\S* (\\S+) mit \\d+(?: Stück|x|g)? Erlös geerntet\\.$", Pattern.CANON_EQ);
+  private static final String PLANT_DIED_MESSAGE = "► Du hast deine Pflanze nicht rechtzeitig geerntet.";
 
   private final GRUtilsAddon addon;
   private final HeilkrautpflanzeHudWidget heilkrautpflanzeHudWidget;
@@ -49,6 +46,11 @@ public class PlantListener {
     final String message = event.chatMessage().getPlainText();
 
     if (beginPlantIfSowMessage(message)) {
+      return;
+    }
+
+    if (message.equals(PLANT_DIED_MESSAGE)) {
+      // TODO somehow find out which plant died...
       return;
     }
 
@@ -108,31 +110,19 @@ public class PlantListener {
    * otherwise
    */
   private boolean beginPlantIfSowMessage(final String message) {
-    // This is to makes the widget display the plant right after planting it
-    // because the server does not send a packet of the plant until it first ticks
-    switch (message) {
-      case HEILKRAUTPFLANZE_SOW_MESSAGE -> {
-        final Plant plant = PlantFactory.createPlant(PlantType.HEILKRAUTPFLANZE);
-        this.heilkrautpflanzeHudWidget.updatePlant(plant);
-        return true;
+    return PlantType.fromSowMessage(message).map(type -> {
+
+      // This is to makes the widget display the plant right after planting it
+      // because the server does not send a packet of the plant until it first ticks
+      final Plant plant = PlantFactory.createPlant(type);
+      switch (type) {
+        case HEILKRAUTPFLANZE -> this.heilkrautpflanzeHudWidget.updatePlant(plant);
+        case ROSE -> this.roseHudWidget.updatePlant(plant);
+        case STOFF -> this.stoffHudWidget.updatePlant(plant);
       }
 
-      case ROSE_SOW_MESSAGE -> {
-        final Plant plant = PlantFactory.createPlant(PlantType.ROSE);
-        this.roseHudWidget.updatePlant(plant);
-        return true;
-      }
-
-      case STOFF_SOW_MESSAGE -> {
-        final Plant plant = PlantFactory.createPlant(PlantType.STOFF);
-        this.stoffHudWidget.updatePlant(plant);
-        return true;
-      }
-
-      default -> {
-        return false;
-      }
-    }
+      return true;
+    }).orElse(false);
   }
 
 }

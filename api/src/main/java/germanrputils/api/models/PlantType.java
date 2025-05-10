@@ -4,20 +4,24 @@ import java.util.Optional;
 
 public enum PlantType {
 
-  HEILKRAUTPFLANZE("Heilkrautpflanze", "Heilkrautpflanze", 15, "g"),
-  ROSE("Rosenstrauch", "Rose", 8, "x"),
-  STOFF("Stoffpflanze", "Stoffpflanze", 15, " Stück");
+  HEILKRAUTPFLANZE("Heilkrautpflanze", "Heilkrautpflanze", 15, "g",
+      "► Du hast eine Heilkrautpflanze ausgelegt."),
+  ROSE("Rosenstrauch", "Rose", 8, "x", "► Du hast einen Rosenstrauch angepflanzt."),
+  STOFF("Stoffpflanze", "Stoffpflanze", 15, " Stück", "► Du hast eine Stoffpflanze ausgelegt.");
 
   private final String displayName;
   private final String paketType;
   private final int maxTime;
   private final String yieldUnit;
+  private final String sowMessage;
 
-  PlantType(String displayName, String paketType, int maxTime, String yieldUnit) {
+  PlantType(String displayName, String paketType, int maxTime, String yieldUnit,
+      String sowMessage) {
     this.displayName = displayName;
     this.paketType = paketType;
     this.maxTime = maxTime;
     this.yieldUnit = yieldUnit;
+    this.sowMessage = sowMessage;
   }
 
   /**
@@ -51,6 +55,15 @@ public enum PlantType {
     return Optional.empty();
   }
 
+  public static Optional<PlantType> fromSowMessage(final String message) {
+    for (final PlantType type : values()) {
+      if (type.getSowMessage().equals(message)) {
+        return Optional.of(type);
+      }
+    }
+    return Optional.empty();
+  }
+
   public String getDisplayName() {
     return displayName;
   }
@@ -65,6 +78,10 @@ public enum PlantType {
 
   public String getYieldUnit() {
     return yieldUnit;
+  }
+
+  public String getSowMessage() {
+    return sowMessage;
   }
 
 }
