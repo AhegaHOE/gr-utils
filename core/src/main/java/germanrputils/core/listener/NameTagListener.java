@@ -43,9 +43,30 @@ public class NameTagListener {
         if (memberlist.contains(playerName) && factiontag != NameTagEnums.NONE) {
           String var17 = this.enumToColor(factiontag.toString());
           prefix = var17 + (gr ? "[GR]" : "");
-          event.setNameTag(Component.text(prefix + playerName + " "));
+          event.setNameTag(Component.text(prefix + playerName));
+          return;
         }
       }
+      if (this.addon.OnServerConnect().getBountyList() != null) {
+        List<String> bountylist = this.addon.OnServerConnect().getBountyList();
+        NameTagEnums bountytag = this.addon.configuration().NameTagSubConfig().bountytag().get();
+        if (bountylist.contains(playerName) && bountytag != NameTagEnums.NONE) {
+          String var17 = this.enumToColor(bountytag.toString());
+          prefix = var17 + (gr ? "[GR]" : "");
+          event.setNameTag(Component.text(prefix + playerName));
+          return;
+        }
+      }
+      if (this.addon.OnServerConnect().getDarklistList() != null) {
+        List<String> darklist = this.addon.OnServerConnect().getDarklistList();
+        NameTagEnums darklisttag = this.addon.configuration().NameTagSubConfig().darklisttag().get();
+        if (darklist.contains(playerName) && darklisttag != NameTagEnums.NONE) {
+          String var17 = this.enumToColor(darklisttag.toString());
+          prefix = var17 + (gr ? "[GR]" : "");
+          event.setNameTag(Component.text(prefix + playerName));
+        }
+      }
+
     }
   }
   private String enumToColor(String color) {

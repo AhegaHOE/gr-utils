@@ -30,10 +30,11 @@ public class OnServerConnect {
       "^    [►»] (\\w{3,16}|\\[GR\\]\\w{3,16})",
       Pattern.CANON_EQ
   );
-
+  private final GRUtilsAddon addon;
 
 
   public OnServerConnect(GRUtilsAddon addon) {
+    this.addon = addon;
   }
 
   @Subscribe
@@ -47,7 +48,7 @@ public class OnServerConnect {
       this.memberList.clear();
       this.bountyList.clear();
       Laby.references().chatExecutor().chat("/darklist");
-      Laby.references().chatExecutor().chat("/members");
+      Laby.references().chatExecutor().chat("/memberinfo " + this.enumTofraction(this.addon.configuration().NameTagSubConfig().factionname().get().toString()));
       Laby.references().chatExecutor().chat("/kopfgelder");
     }
   }
@@ -63,10 +64,10 @@ public class OnServerConnect {
         if (!matcher.find()) {
           return;
         }
-        this.darklistList.add(matcher.group(1));
+        this.darklistList.add(matcher.group(1).replace("[GR]", ""));
         return;
       }
-      if (message.contentEquals("                 ► Fraktionsmember online ◄")) {
+      if (message.startsWith("          ► Fraktionsmitglieder ")) {
         event.setCancelled(true);
         this.faction = true;
         return;
@@ -81,7 +82,7 @@ public class OnServerConnect {
           }
           return;
         }
-        this.memberList.add(matcher.group(1));
+        this.memberList.add(matcher.group(1).replace("[GR]", ""));
         return;
       }
       if (message.contentEquals("            KOPFGELDER")) {
@@ -97,12 +98,21 @@ public class OnServerConnect {
           this.justJoined = false;
           return;
         }
-        this.bountyList.add(matcher.group(1));
+        this.bountyList.add(matcher.group(1).replace("[GR]", ""));
         return;
       }
       if(message.isEmpty()){
         event.setCancelled(true);
       }
+    }
+  }
+  private String enumTofraction(String fraction) {
+    String name;
+    if (fraction.equals("MTFASHION")) {
+      name = "MT-Fashion";
+      return name;
+    } else {
+      return fraction;
     }
   }
 
